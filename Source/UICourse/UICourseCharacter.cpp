@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "Widgets/MainMenuWidget.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -71,6 +73,7 @@ void AUICourseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		if (UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer()))
 		{
 			Subsystem->AddMappingContext(DefaultMappingContext, 0);
+			Subsystem->AddMappingContext(MainMenuMappingContext, 1);
 		}
 	}
 	
@@ -86,6 +89,9 @@ void AUICourseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUICourseCharacter::Look);
+
+		//Toggle Main Menu
+		EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Triggered, this, &AUICourseCharacter::ToggleInventory);
 	}
 	else
 	{
@@ -127,4 +133,29 @@ void AUICourseCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void AUICourseCharacter::ToggleInventory(const FInputActionValue& Value)
+{
+	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	if (!bIsShowingMainMenu)
+	{
+		MainMenuWidget = CreateWidget<UMainMenuWidget>(PlayerController, MainMenuSubclass);
+		MainMenuWidget->AddToViewport();		
+		FInputModeGameAndUI InputMode;
+		InputMode.SetWidgetToFocus(MainMenuWidget->TakeWidget());
+		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+		
+		PlayerController->SetInputMode(InputMode);
+		PlayerController->SetShowMouseCursor(true);
+		bIsShowingMainMenu = true;
+		return;
+	}
+
+	MainMenuWidget->RemoveFromParent();	
+	FInputModeGameOnly InputMode;
+	PlayerController->SetInputMode(InputMode);
+	PlayerController->SetShowMouseCursor(false);
+	bIsShowingMainMenu = false;
+	MainMenuWidget = nullptr;
 }
