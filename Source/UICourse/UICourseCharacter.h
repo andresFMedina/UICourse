@@ -9,12 +9,14 @@
 
 class USpringArmComponent;
 class UCameraComponent;
+class UInventoryComponent;
 class UInputMappingContext;
 class UInputAction;
 class UMainMenuWidget;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoneyChange, int32, MoneyAmount);
 
 UCLASS(config=Game)
 class AUICourseCharacter : public ACharacter
@@ -28,6 +30,9 @@ class AUICourseCharacter : public ACharacter
 	/** Follow camera */
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
 	UCameraComponent* FollowCamera;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, meta = (AllowPrivateAccess = "true"))
+	UInventoryComponent* InventoryComponent;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -49,17 +54,12 @@ class AUICourseCharacter : public ACharacter
 	UInputAction* LookAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* ToggleInventoryAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<UMainMenuWidget> MainMenuSubclass;
-
-	UMainMenuWidget* MainMenuWidget;
-
-	bool bIsShowingMainMenu;
+	UInputAction* ToggleInventoryAction;	
 
 public:
 	AUICourseCharacter();
+
+	FOnMoneyChange OnMoneyChangeDelegate;
 	
 
 protected:
@@ -85,5 +85,6 @@ public:
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
+	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
 };
 

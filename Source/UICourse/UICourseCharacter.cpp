@@ -12,6 +12,7 @@
 #include "InputActionValue.h"
 #include "Widgets/MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
+#include "Components/InventoryComponent.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -54,6 +55,7 @@ AUICourseCharacter::AUICourseCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 }
 
 void AUICourseCharacter::BeginPlay()
@@ -137,25 +139,5 @@ void AUICourseCharacter::Look(const FInputActionValue& Value)
 
 void AUICourseCharacter::ToggleInventory(const FInputActionValue& Value)
 {
-	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	if (!bIsShowingMainMenu)
-	{
-		MainMenuWidget = CreateWidget<UMainMenuWidget>(PlayerController, MainMenuSubclass);
-		MainMenuWidget->AddToViewport();		
-		FInputModeGameAndUI InputMode;
-		InputMode.SetWidgetToFocus(MainMenuWidget->TakeWidget());
-		InputMode.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
-		
-		PlayerController->SetInputMode(InputMode);
-		PlayerController->SetShowMouseCursor(true);
-		bIsShowingMainMenu = true;
-		return;
-	}
-
-	MainMenuWidget->RemoveFromParent();	
-	FInputModeGameOnly InputMode;
-	PlayerController->SetInputMode(InputMode);
-	PlayerController->SetShowMouseCursor(false);
-	bIsShowingMainMenu = false;
-	MainMenuWidget = nullptr;
+	InventoryComponent->ToggleInventory();
 }
