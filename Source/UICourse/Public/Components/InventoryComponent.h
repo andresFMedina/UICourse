@@ -6,6 +6,10 @@
 #include "Components/ActorComponent.h"
 #include "InventoryComponent.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoneyChange, int32, MoneyAmount);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChange, float, NewMaxHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChange, float, NewCurrentHealth);
+
 class UMainMenuWidget;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -23,15 +27,24 @@ class UICOURSE_API UInventoryComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	int MoneyAmount;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	float MaxHealth;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth;
 
 public:	
 	// Sets default values for this component's properties
 	UInventoryComponent();
+
+	UPROPERTY(BlueprintReadOnly)
+	FOnMoneyChange OnMoneyChangeDelegate;
+
+	UPROPERTY(BlueprintReadOnly)
+	FOnMaxHealthChange OnMaxHealthChangeDelegate;
+
+	UPROPERTY(BlueprintReadOnly)
+	FOnCurrentHealthChange OnCurrentHealthChangeDelegate;
 
 protected:
 	// Called when the game starts
@@ -45,4 +58,13 @@ public:
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
 
 	FORCEINLINE float GetCurrentHealth() const { return CurrentHealth; }
+
+	UFUNCTION(BlueprintCallable)
+	void AddMoney(const int32 NewMoneyAmount);
+
+	UFUNCTION(BlueprintCallable)
+	void SetMaxHealth(const float NewMaxHealth);
+
+	UFUNCTION(BlueprintCallable)
+	void SetCurrentHealth(const float NewCurrentHealth);
 };

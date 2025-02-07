@@ -16,7 +16,7 @@ class UMainMenuWidget;
 struct FInputActionValue;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoneyChange, int32, MoneyAmount);
+
 
 UCLASS(config=Game)
 class AUICourseCharacter : public ACharacter
@@ -57,10 +57,7 @@ class AUICourseCharacter : public ACharacter
 	UInputAction* ToggleInventoryAction;	
 
 public:
-	AUICourseCharacter();
-
-	FOnMoneyChange OnMoneyChangeDelegate;
-	
+	AUICourseCharacter();	
 
 protected:
 

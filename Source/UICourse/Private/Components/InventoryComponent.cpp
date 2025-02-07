@@ -51,3 +51,21 @@ void UInventoryComponent::ToggleInventory()
 	bIsShowingMainMenu = false;
 	MainMenuWidget = nullptr;
 }
+
+void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)
+{
+	MoneyAmount += NewMoneyAmount;
+	OnMoneyChangeDelegate.Broadcast(MoneyAmount);
+}
+
+void UInventoryComponent::SetMaxHealth(const float NewMaxHealth)
+{
+	MaxHealth += NewMaxHealth;
+	OnMaxHealthChangeDelegate.Broadcast(NewMaxHealth);
+}
+
+void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
+{
+	CurrentHealth += NewCurrentHealth;
+	OnCurrentHealthChangeDelegate.Broadcast(CurrentHealth);
+}

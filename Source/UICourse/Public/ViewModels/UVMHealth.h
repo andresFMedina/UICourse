@@ -20,11 +20,16 @@ class UICOURSE_API UUVMHealth : public UMVVMViewModelBase
 	UPROPERTY(BlueprintReadOnly, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess))
 	float CurrentHealth;
 
+protected:
+
+	UFUNCTION(BlueprintCallable)
 	void Init();
 
 public:
 	float GetMaxHealth() const;
 	float GetCurrentHealth() const;
+	UFUNCTION()
 	void SetMaxHealth(const float NewMaxHealth);
+	UFUNCTION()
 	void SetCurrentHealth(const float NewCurrentHealth);
 };

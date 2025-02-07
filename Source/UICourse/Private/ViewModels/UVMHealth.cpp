@@ -13,8 +13,12 @@ void UUVMHealth::Init()
 	auto PlayerCharacter = Cast<AUICourseCharacter>(CurrentPawn);
 	if (PlayerCharacter)
 	{
-		SetMaxHealth(PlayerCharacter->GetInventoryComponent()->GetMaxHealth());
-		SetCurrentHealth(PlayerCharacter->GetInventoryComponent()->GetCurrentHealth());
+		auto PlayerInventory = PlayerCharacter->GetInventoryComponent();
+		SetMaxHealth(PlayerInventory->GetMaxHealth());
+		SetCurrentHealth(PlayerInventory->GetCurrentHealth());
+		PlayerInventory->OnMaxHealthChangeDelegate.AddDynamic(this, &ThisClass::SetMaxHealth);
+		PlayerInventory->OnCurrentHealthChangeDelegate.AddDynamic(this, &ThisClass::SetCurrentHealth);
+		
 	}
 }
 
@@ -30,10 +34,10 @@ float UUVMHealth::GetCurrentHealth() const
 
 void UUVMHealth::SetMaxHealth(const float NewMaxHealth)
 {
-	MaxHealth = NewMaxHealth;
+	UE_MVVM_SET_PROPERTY_VALUE(MaxHealth, NewMaxHealth);	
 }
 
 void UUVMHealth::SetCurrentHealth(const float NewCurrentHealth)
 {
-	CurrentHealth = NewCurrentHealth;
+	UE_MVVM_SET_PROPERTY_VALUE(CurrentHealth, NewCurrentHealth);
 }

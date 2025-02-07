@@ -21,6 +21,7 @@ class UICOURSE_API UUVMMoney : public UMVVMViewModelBase
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
+	UFUNCTION()
 	void OnMoneyChanged(int32 NewAmount);
 	
 public:

@@ -12,9 +12,10 @@ void UUVMMoney::Init()
 	auto CurrentPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 	auto PlayerCharacter = Cast<AUICourseCharacter>(CurrentPawn);
 	if (PlayerCharacter)
-	{		
-		SetCurrentMoney(PlayerCharacter->GetInventoryComponent()->GetMoneyAmount());
-		PlayerCharacter->OnMoneyChangeDelegate.AddDynamic(this, &ThisClass::OnMoneyChanged);
+	{
+		auto PlayerInventory = PlayerCharacter->GetInventoryComponent();
+		SetCurrentMoney(PlayerInventory->GetMoneyAmount());
+		PlayerInventory->OnMoneyChangeDelegate.AddDynamic(this, &ThisClass::OnMoneyChanged);
 	}
 }
 
