@@ -69,3 +69,8 @@ void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
 	CurrentHealth += NewCurrentHealth;
 	OnCurrentHealthChangeDelegate.Broadcast(CurrentHealth);
 }
+
+void UInventoryComponent::AddItem(UItemInventoryModel* NewItem)
+{
+	InventoryItems.Add(NewItem);
+}

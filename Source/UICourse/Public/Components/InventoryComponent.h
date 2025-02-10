@@ -11,6 +11,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChange, float, NewMaxHea
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChange, float, NewCurrentHealth);
 
 class UMainMenuWidget;
+class UItemInventoryModel;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UICOURSE_API UInventoryComponent : public UActorComponent
@@ -32,6 +33,9 @@ class UICOURSE_API UInventoryComponent : public UActorComponent
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	float CurrentHealth;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
+	TArray<UItemInventoryModel*> InventoryItems;
 
 public:	
 	// Sets default values for this component's properties
@@ -59,6 +63,8 @@ public:
 
 	FORCEINLINE float GetCurrentHealth() const { return CurrentHealth; }
 
+	FORCEINLINE const TArray<UItemInventoryModel*> GetInventoryItems() const { return InventoryItems; }
+
 	UFUNCTION(BlueprintCallable)
 	void AddMoney(const int32 NewMoneyAmount);
 
@@ -67,4 +73,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentHealth(const float NewCurrentHealth);
+
+	UFUNCTION(BlueprintCallable)
+	void AddItem(UItemInventoryModel* NewItem);
 };

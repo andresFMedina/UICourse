@@ -3,3 +3,6 @@
 
 #include "Widgets/InventoryWidget.h"
 
+void UInventoryWidget::NativeConstruct()
+{
+}

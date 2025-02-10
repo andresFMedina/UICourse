@@ -16,7 +16,7 @@ class UICOURSE_API UItemInventoryModel : public UObject
 
 	FInventoryItemRow ItemInfo;
 
-private:
+public:
 	FORCEINLINE const FInventoryItemRow& GetItemInfo()const { return ItemInfo; }
 	
 };
