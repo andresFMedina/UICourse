@@ -13,17 +13,23 @@
 #include "Widgets/MainMenuWidget.h"
 #include "Kismet/GameplayStatics.h"
 #include "Components/InventoryComponent.h"
+#include "Components/PlayerInteractComponent.h"
+#include "Actors/Item.h"
+#include "Data/ItemInventory.h"
+
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
 //////////////////////////////////////////////////////////////////////////
 // AUICourseCharacter
 
+
 AUICourseCharacter::AUICourseCharacter()
 {
 	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
-		
+
 	// Don't rotate when the controller rotates. Let that just affect the camera.
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -56,12 +62,21 @@ AUICourseCharacter::AUICourseCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
+
+	PlayerInteractComponent = CreateDefaultSubobject<UPlayerInteractComponent>(TEXT("PlayerInteractComponent"));
 }
 
 void AUICourseCharacter::BeginPlay()
 {
 	// Call the base class  
 	Super::BeginPlay();
+
+	PlayerInteractComponent->OnInteractedDelegate.AddDynamic(InventoryComponent, &UInventoryComponent::AddItem);
+}
+
+void AUICourseCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);	
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -78,10 +93,10 @@ void AUICourseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 			Subsystem->AddMappingContext(MainMenuMappingContext, 1);
 		}
 	}
-	
+
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -93,7 +108,9 @@ void AUICourseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputC
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &AUICourseCharacter::Look);
 
 		//Toggle Main Menu
-		EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Triggered, this, &AUICourseCharacter::ToggleInventory);
+		EnhancedInputComponent->BindAction(ToggleInventoryAction, ETriggerEvent::Triggered, InventoryComponent, &UInventoryComponent::ToggleInventory);
+
+		EnhancedInputComponent->BindAction(InteractAction, ETriggerEvent::Started, PlayerInteractComponent, &UPlayerInteractComponent::Interact);
 	}
 	else
 	{
@@ -114,7 +131,7 @@ void AUICourseCharacter::Move(const FInputActionValue& Value)
 
 		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	
+
 		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
@@ -135,9 +152,4 @@ void AUICourseCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
-}
-
-void AUICourseCharacter::ToggleInventory(const FInputActionValue& Value)
-{
-	InventoryComponent->ToggleInventory();
 }

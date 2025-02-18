@@ -9,9 +9,11 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoneyChange, int32, MoneyAmount);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMaxHealthChange, float, NewMaxHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnCurrentHealthChange, float, NewCurrentHealth);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryToggle, bool, ShowMainHud);
 
 class UMainMenuWidget;
 class UItemInventoryModel;
+struct FItemSlot;
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class UICOURSE_API UInventoryComponent : public UActorComponent
@@ -50,6 +52,9 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FOnCurrentHealthChange OnCurrentHealthChangeDelegate;
 
+	UPROPERTY(BlueprintReadOnly)
+	FOnInventoryToggle OnInventoryToggleDelegate;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;	
@@ -75,5 +80,5 @@ public:
 	void SetCurrentHealth(const float NewCurrentHealth);
 
 	UFUNCTION(BlueprintCallable)
-	void AddItem(UItemInventoryModel* NewItem);
+	void AddItem(FItemSlot NewItem);
 };

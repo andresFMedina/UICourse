@@ -4,6 +4,8 @@
 #include "Components/InventoryComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Widgets/MainMenuWidget.h"
+#include "Data/ItemInventory.h"
+#include "Model/ItemInventoryModel.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -41,6 +43,7 @@ void UInventoryComponent::ToggleInventory()
 		PlayerController->SetInputMode(InputMode);
 		PlayerController->SetShowMouseCursor(true);
 		bIsShowingMainMenu = true;
+		OnInventoryToggleDelegate.Broadcast(true);
 		return;
 	}
 
@@ -50,6 +53,7 @@ void UInventoryComponent::ToggleInventory()
 	PlayerController->SetShowMouseCursor(false);
 	bIsShowingMainMenu = false;
 	MainMenuWidget = nullptr;
+	OnInventoryToggleDelegate.Broadcast(false);
 }
 
 void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)
@@ -70,7 +74,9 @@ void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
 	OnCurrentHealthChangeDelegate.Broadcast(CurrentHealth);
 }
 
-void UInventoryComponent::AddItem(UItemInventoryModel* NewItem)
+void UInventoryComponent::AddItem(FItemSlot NewItemSlot)
 {
+	auto NewItem = NewObject<UItemInventoryModel>();
+	NewItem->SetItemInfo(NewItemSlot);
 	InventoryItems.Add(NewItem);
 }

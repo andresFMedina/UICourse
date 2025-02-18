@@ -11,7 +11,22 @@ enum class EItemType : uint8
 {
 	SWORD,
 	SHIELD,
-	CONSUMABLE
+	CONSUMABLE,
+	MAX_VALUE UMETA(Hidden)
+};
+
+USTRUCT(BlueprintType)
+struct FItemSlot
+{
+	GENERATED_BODY()
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	FDataTableRowHandle ItemRow;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EItemType ItemType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int32 ItemQuantity;
 };
 
 USTRUCT(BlueprintType)
@@ -32,10 +47,7 @@ public:
 	int32 StackSize;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	float Power;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	EItemType ItemType;
+	float Power;	
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TSoftObjectPtr<UStaticMesh> Mesh;

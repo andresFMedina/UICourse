@@ -3,6 +3,7 @@
 
 #include "Widgets/ItemInventoryEntryWidget.h"
 #include "Model/ItemInventoryModel.h"
+#include "Data/ItemInventory.h"
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Kismet/KismetTextLibrary.h"
@@ -12,7 +13,11 @@ void UItemInventoryEntryWidget::NativeOnListItemObjectSet(UObject* ItemInventory
 	InventoryItem = Cast<UItemInventoryModel>(ItemInventoryModel);
 	check(InventoryItem);
 
-	ItemIcon->SetBrushFromSoftTexture(InventoryItem->GetItemInfo().Thumbnail);
-	TextItemStack->SetText(UKismetTextLibrary::Conv_IntToText(InventoryItem->GetItemInfo().StackSize));
+	if (InventoryItem->GetItemInfo())
+	{
+		auto Item = InventoryItem->GetItemInfo()->ItemRow.GetRow<FInventoryItemRow>("Get Row Inv");
+		ItemIcon->SetBrushFromSoftTexture(Item->Thumbnail);
+		TextItemStack->SetText(UKismetTextLibrary::Conv_IntToText(InventoryItem->GetItemInfo()->ItemQuantity));
+	}
 
 }

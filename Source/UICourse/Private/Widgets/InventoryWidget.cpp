@@ -5,4 +5,5 @@
 
 void UInventoryWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 }

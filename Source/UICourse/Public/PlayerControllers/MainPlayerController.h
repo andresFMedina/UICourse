@@ -13,5 +13,14 @@ UCLASS()
 class UICOURSE_API AMainPlayerController : public APlayerController
 {
 	GENERATED_BODY()
+
+protected:
+	void BeginPlay() override;
+private:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "HUD", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class UUserWidget> MainHUDClass;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "HUD", meta = (AllowPrivateAccess = "true"))
+	UUserWidget* MainHUD;
 	
 };

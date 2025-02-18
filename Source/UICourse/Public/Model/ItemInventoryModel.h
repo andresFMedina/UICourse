@@ -14,9 +14,10 @@ class UICOURSE_API UItemInventoryModel : public UObject
 {
 	GENERATED_BODY()
 
-	FInventoryItemRow ItemInfo;
+	FItemSlot ItemInfo;
 
 public:
-	FORCEINLINE const FInventoryItemRow& GetItemInfo()const { return ItemInfo; }
+	FORCEINLINE const FItemSlot* GetItemInfo()const { return &ItemInfo; }
+	FORCEINLINE void SetItemInfo(const FItemSlot& Item) { ItemInfo = Item; }
 	
 };
