@@ -95,7 +95,10 @@ void UPlayerInteractComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void UPlayerInteractComponent::Interact()
 {
-	auto Item = Cast<AItem>(Interactable);
-	if (Item) OnInteractedDelegate.Broadcast(Item->GetItemInfo());
-	Interactable->Interact();	
+	if (Interactable) 
+	{
+		auto Item = Cast<AItem>(Interactable);
+		if (Item) OnInteractedDelegate.Broadcast(Item->GetItemInfo());
+		Interactable->Interact();
+	}
 }

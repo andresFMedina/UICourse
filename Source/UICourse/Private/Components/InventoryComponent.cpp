@@ -29,6 +29,18 @@ void UInventoryComponent::BeginPlay()
 	
 }
 
+UItemInventoryModel* UInventoryComponent::FindExistingItemByName(const FName ItemName) const
+{
+	if (!InventoryItems.IsEmpty()) {
+		auto ItemFound = InventoryItems.FindByPredicate([&ItemName](UItemInventoryModel* Item)
+			{
+				return Item->GetItemInfo()->ItemRow.RowName == ItemName && Item->GetItemInfo()->ItemQuantity < Item->GetItemInfo()->ItemRow.GetRow<FInventoryItemRow>("")->StackSize;
+			});
+		return ItemFound ? *ItemFound : nullptr;
+	}
+	return nullptr;
+}
+
 void UInventoryComponent::ToggleInventory()
 {
 	auto PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
@@ -76,7 +88,35 @@ void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
 
 void UInventoryComponent::AddItem(FItemSlot NewItemSlot)
 {
+	FName& RowName = NewItemSlot.ItemRow.RowName;
+	UItemInventoryModel* ExistingItem = FindExistingItemByName(RowName);
+	if (!ExistingItem) 
+	{
+		return CreateSlot(NewItemSlot);
+	}
+
+	auto ItemInfo = ExistingItem->GetItemInfo();
+	int16 AvaliableSlotItems = ItemInfo->ItemRow.GetRow<FInventoryItemRow>("")->StackSize - ItemInfo->ItemQuantity;
+	if (AvaliableSlotItems >= NewItemSlot.ItemQuantity)
+	{
+		ExistingItem->AddStackToItem(NewItemSlot.ItemQuantity);
+		return;
+	}
+	int16 RemainingItems = NewItemSlot.ItemQuantity - AvaliableSlotItems;
+	ExistingItem->AddStackToItem(AvaliableSlotItems);
+
+	if (RemainingItems > 0)
+	{
+		NewItemSlot.ItemQuantity = RemainingItems;
+		CreateSlot(NewItemSlot);
+	}
+
+}
+
+void UInventoryComponent::CreateSlot(FItemSlot& NewItemSlot)
+{
 	auto NewItem = NewObject<UItemInventoryModel>();
 	NewItem->SetItemInfo(NewItemSlot);
 	InventoryItems.Add(NewItem);
+	return;
 }

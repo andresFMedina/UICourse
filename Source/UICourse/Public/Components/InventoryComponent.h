@@ -59,6 +59,11 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;	
 
+private:
+	UItemInventoryModel* FindExistingItemByName(const FName ItemName) const;
+
+	void CreateSlot(FItemSlot& NewItemSlot);
+
 public:		
 	void ToggleInventory();
 	
