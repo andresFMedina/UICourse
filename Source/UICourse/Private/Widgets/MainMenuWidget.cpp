@@ -5,5 +5,6 @@
 
 void UMainMenuWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	SetIsFocusable(true);
 }

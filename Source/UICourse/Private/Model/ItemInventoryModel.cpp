@@ -3,3 +3,7 @@
 
 #include "Model/ItemInventoryModel.h"
 
+FInventoryItemRow& UItemInventoryModel::GetItemRefInfo()
+{
+    return *ItemInfo.ItemRow.GetRow<FInventoryItemRow>("Item from model");
+}

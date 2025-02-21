@@ -16,11 +16,13 @@ void UHeartWidget::SetIconByPercent()
 
 void UHeartWidget::NativePreConstruct()
 {	
+	Super::NativePreConstruct();
 	SetIconByPercent();
 }
 
 void UHeartWidget::NativeConstruct()
 {
+	Super::NativeConstruct();
 	SetIconByPercent();
 }
 

@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Blueprint/IUserObjectListEntry.h"
+#include "Data/ItemInventory.h"
 #include "ItemInventoryEntryWidget.generated.h"
 
 class UImage;
@@ -24,10 +25,10 @@ class UICOURSE_API UItemInventoryEntryWidget : public UUserWidget, public IUserO
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UTextBlock* TextItemStack;
 	
+	UPROPERTY(VisibleAnywhere)
 	UItemInventoryModel* InventoryItem;
 
 
 protected:
 	virtual void NativeOnListItemObjectSet(UObject* ItemInventoryModel) override;
-	
 };
