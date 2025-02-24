@@ -25,7 +25,7 @@ class UICOURSE_API UItemInventoryEntryWidget : public UUserWidget, public IUserO
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UTextBlock* TextItemStack;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess="true"))
 	UItemInventoryModel* InventoryItem;
 
 
