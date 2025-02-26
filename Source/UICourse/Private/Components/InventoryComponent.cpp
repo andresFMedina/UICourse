@@ -6,6 +6,7 @@
 #include "Widgets/MainMenuWidget.h"
 #include "Data/ItemInventory.h"
 #include "Model/ItemInventoryModel.h"
+#include "UICourse/UICourseCharacter.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -13,10 +14,7 @@ UInventoryComponent::UInventoryComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = false;
-
-	MaxHealth = 5;
-	CurrentHealth = MaxHealth;
-	MoneyAmount = 0;
+	
 }
 
 
@@ -26,7 +24,7 @@ void UInventoryComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+
 }
 
 UItemInventoryModel* UInventoryComponent::FindExistingItemByName(const FName ItemName) const
@@ -90,7 +88,7 @@ void UInventoryComponent::AddItem(FItemSlot NewItemSlot)
 {
 	FName& RowName = NewItemSlot.ItemRow.RowName;
 	UItemInventoryModel* ExistingItem = FindExistingItemByName(RowName);
-	if (!ExistingItem) 
+	if (!ExistingItem)
 	{
 		return CreateSlot(NewItemSlot);
 	}
@@ -111,6 +109,52 @@ void UInventoryComponent::AddItem(FItemSlot NewItemSlot)
 		CreateSlot(NewItemSlot);
 	}
 
+}
+
+void UInventoryComponent::DropItem(UItemInventoryModel* ItemToDrop)
+{
+	if (ItemToDrop->GetItemInfo()->ItemQuantity - 1 <= 0)
+	{
+		InventoryItems.Remove(ItemToDrop);
+		return;
+	}
+
+	ItemToDrop->RemoveStackToItem(1);
+}
+
+void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
+{
+	switch (ItemToUse->GetItemInfo()->ItemType)
+	{
+		case EItemType::CONSUMABLE:
+		{
+			float MissingHealth = MaxHealth - CurrentHealth;
+
+			float HealthToAdd = FMath::Clamp(ItemToUse->GetItemRefInfo().Power, 0.5f, MissingHealth);
+			SetCurrentHealth(HealthToAdd);
+			break;
+		}
+		case EItemType::SWORD:
+		{
+			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
+			if (Character)
+			{
+				Character->SetRightHandMesh(ItemToUse->GetItemRefInfo().Mesh);
+			}
+			break;
+		}
+		case EItemType::SHIELD:
+		{
+			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
+			if (Character)
+			{				
+				Character->SetLeftHandMesh(ItemToUse->GetItemRefInfo().Mesh);
+			}
+			break;
+		}
+		default:
+			break;
+		}
 }
 
 void UInventoryComponent::CreateSlot(FItemSlot& NewItemSlot)

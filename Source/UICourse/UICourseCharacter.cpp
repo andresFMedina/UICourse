@@ -64,6 +64,13 @@ AUICourseCharacter::AUICourseCharacter()
 	InventoryComponent = CreateDefaultSubobject<UInventoryComponent>(TEXT("InventoryComponent"));
 
 	PlayerInteractComponent = CreateDefaultSubobject<UPlayerInteractComponent>(TEXT("PlayerInteractComponent"));
+
+	RightHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RightHandEquip"));
+	RightHandMesh->SetupAttachment(GetMesh(), FName("RightHandSocket"));
+
+	LeftHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftHandEquip"));
+	LeftHandMesh->SetupAttachment(GetMesh(), FName("LeftHandSocket"));
+	
 }
 
 void AUICourseCharacter::BeginPlay()
@@ -77,6 +84,24 @@ void AUICourseCharacter::BeginPlay()
 void AUICourseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);	
+}
+
+void AUICourseCharacter::SetRightHandMesh(TSoftObjectPtr<UStaticMesh> NewRightHandMesh)
+{
+	if (RightHandMesh->GetStaticMesh())
+	{
+		RightHandMesh->SetStaticMesh(nullptr);
+	}
+	RightHandMesh->SetStaticMesh(NewRightHandMesh.LoadSynchronous());
+}
+
+void AUICourseCharacter::SetLeftHandMesh(TSoftObjectPtr<UStaticMesh> NewLeftHandMesh)
+{
+	if (LeftHandMesh->GetStaticMesh())
+	{
+		LeftHandMesh->SetStaticMesh(nullptr);
+	}
+	LeftHandMesh->SetStaticMesh(NewLeftHandMesh.LoadSynchronous());
 }
 
 //////////////////////////////////////////////////////////////////////////

@@ -38,6 +38,12 @@ class AUICourseCharacter : public ACharacter
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
 	UPlayerInteractComponent* PlayerInteractComponent;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* RightHandMesh;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Inventory, meta = (AllowPrivateAccess = "true"))
+	UStaticMeshComponent* LeftHandMesh;
 	
 	/** MappingContext */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
@@ -62,7 +68,8 @@ class AUICourseCharacter : public ACharacter
 	UInputAction* ToggleInventoryAction;	
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
-	UInputAction* InteractAction;	
+	UInputAction* InteractAction;
+
 	
 
 public:
@@ -88,10 +95,15 @@ protected:
 	
 
 public:
+	void SetRightHandMesh(TSoftObjectPtr<UStaticMesh> NewRightHandMesh);
+	void SetLeftHandMesh(TSoftObjectPtr<UStaticMesh> NewLeftHandMesh);
+
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	/** Returns FollowCamera subobject **/
 	FORCEINLINE class UCameraComponent* GetFollowCamera() const { return FollowCamera; }
 	FORCEINLINE UInventoryComponent* GetInventoryComponent() const { return InventoryComponent; }
+
+
 };
 

@@ -86,4 +86,10 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void AddItem(FItemSlot NewItem);
+
+	UFUNCTION(BlueprintCallable)
+	void DropItem(UItemInventoryModel* ItemToDrop);
+
+	UFUNCTION(BlueprintCallable)
+	void UseItem(UItemInventoryModel* ItemToUse);
 };

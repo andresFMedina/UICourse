@@ -30,6 +30,8 @@ void UUVMInventory::Init()
 				});
 		}
 		SetSelectedItemType(EItemType::CONSUMABLE);
+		OnItemUseDelegate.AddDynamic(PlayerInventory, &UInventoryComponent::UseItem);
+		OnDropItemDelegate.AddDynamic(PlayerInventory, &UInventoryComponent::DropItem);
 	}
 }
 
@@ -51,4 +53,14 @@ void UUVMInventory::SetSelectedItemType(const EItemType ItemType)
 	{
 		UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(GetListByItemType);
 	}
+}
+
+void UUVMInventory::UseItem(UItemInventoryModel* ItemToUse)
+{
+	OnItemUseDelegate.Broadcast(ItemToUse);
+}
+
+void UUVMInventory::DropItem(UItemInventoryModel* ItemToDrop)
+{
+	OnDropItemDelegate.Broadcast(ItemToDrop);
 }

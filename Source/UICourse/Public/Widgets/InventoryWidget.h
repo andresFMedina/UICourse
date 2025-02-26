@@ -7,6 +7,7 @@
 #include "InventoryWidget.generated.h"
 
 class UTileView;
+class UItemMenuWidget;
 /**
  * 
  */
@@ -18,7 +19,15 @@ class UICOURSE_API UInventoryWidget : public UUserWidget
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	UTileView* InventoryTileView;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess ="true"))
+	UItemMenuWidget* ItemMenuWidget;
+
+	UFUNCTION(BlueprintCallable)
+	void CloseItemMenuWidget();
+
+	
+
 protected:
 	virtual void NativeConstruct() override;
-	
+
 };

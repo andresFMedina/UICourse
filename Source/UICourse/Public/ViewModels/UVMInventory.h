@@ -8,6 +8,7 @@
 #include "UVMInventory.generated.h"
 
 
+class UItemInventoryModel;
 USTRUCT(BlueprintType)
 struct FInventoryByCategory
 {
@@ -19,7 +20,9 @@ public:
 
 };
 
-class UItemInventoryModel;
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemUse, UItemInventoryModel*, ItemToUse);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDropItem, UItemInventoryModel*, ItemToDrop);
+
 /**
  * 
  */
@@ -36,6 +39,11 @@ class UICOURSE_API UUVMInventory : public UMVVMViewModelBase
 	TMap<EItemType, FInventoryByCategory> InventoryItemsByType;
 
 public:
+
+	FOnItemUse OnItemUseDelegate;
+
+	FOnDropItem OnDropItemDelegate;
+
 	UFUNCTION(BlueprintCallable)
 	void Init();
 
@@ -46,5 +54,11 @@ public:
 	const EItemType GetSelectedItemType()const;
 	UFUNCTION()
 	void SetSelectedItemType(const EItemType ItemType);
+
+	UFUNCTION(BlueprintCallable)
+	void UseItem(UItemInventoryModel* ItemToUse);
+
+	UFUNCTION(BlueprintCallable)
+	void DropItem(UItemInventoryModel* ItemToDrop);
 	
 };
