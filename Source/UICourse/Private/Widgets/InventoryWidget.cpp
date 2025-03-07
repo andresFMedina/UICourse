@@ -2,7 +2,9 @@
 
 
 #include "Widgets/InventoryWidget.h"
+#include "Components/TileView.h"
 #include "Widgets/ItemMenuWidget.h"
+#include "Model/ItemInventoryModel.h"
 
 void UInventoryWidget::CloseItemMenuWidget()
 {
@@ -11,6 +13,11 @@ void UInventoryWidget::CloseItemMenuWidget()
 		ItemMenuWidget->RemoveFromParent();
 		ItemMenuWidget = nullptr;
 	}
+}
+
+void UInventoryWidget::OnRemoveItem(UItemInventoryModel* ItemToRemove)
+{
+	InventoryTileView->RemoveItem(ItemToRemove);
 }
 
 void UInventoryWidget::NativeConstruct()

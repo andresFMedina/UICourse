@@ -22,6 +22,7 @@ public:
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnItemUse, UItemInventoryModel*, ItemToUse);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnDropItem, UItemInventoryModel*, ItemToDrop);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnRemoveListItem, UItemInventoryModel*, ItemToRemove);
 
 /**
  * 
@@ -43,6 +44,9 @@ public:
 	FOnItemUse OnItemUseDelegate;
 
 	FOnDropItem OnDropItemDelegate;
+
+	UPROPERTY(BlueprintCallable, BlueprintAssignable)
+	FOnRemoveListItem OnRemoveListItemDelegate;
 
 	UFUNCTION(BlueprintCallable)
 	void Init();

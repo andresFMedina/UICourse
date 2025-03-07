@@ -57,10 +57,20 @@ void UUVMInventory::SetSelectedItemType(const EItemType ItemType)
 
 void UUVMInventory::UseItem(UItemInventoryModel* ItemToUse)
 {
+	if (ItemToUse->GetItemInfo()->ItemType == EItemType::CONSUMABLE)
+	{
+		ItemToUse->RemoveStackToItem(1);
+	}
 	OnItemUseDelegate.Broadcast(ItemToUse);
 }
 
 void UUVMInventory::DropItem(UItemInventoryModel* ItemToDrop)
 {
+	ItemToDrop->RemoveStackToItem(1);
+	if (ItemToDrop->GetItemInfo()->ItemQuantity <= 0)
+	{
+		OnRemoveListItemDelegate.Broadcast(ItemToDrop);
+	}
 	OnDropItemDelegate.Broadcast(ItemToDrop);
+	
 }

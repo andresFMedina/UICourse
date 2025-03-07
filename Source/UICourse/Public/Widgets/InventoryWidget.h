@@ -8,6 +8,7 @@
 
 class UTileView;
 class UItemMenuWidget;
+class UItemInventoryModel;
 /**
  * 
  */
@@ -25,7 +26,8 @@ class UICOURSE_API UInventoryWidget : public UUserWidget
 	UFUNCTION(BlueprintCallable)
 	void CloseItemMenuWidget();
 
-	
+	UFUNCTION(BlueprintCallable)
+	void OnRemoveItem(UItemInventoryModel* ItemToRemove);
 
 protected:
 	virtual void NativeConstruct() override;

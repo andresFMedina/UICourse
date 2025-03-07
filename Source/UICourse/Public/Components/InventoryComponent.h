@@ -55,6 +55,7 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FOnInventoryToggle OnInventoryToggleDelegate;
 
+	
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;	

@@ -16,10 +16,15 @@ AItem::AItem() :
 	StaticMesh = CreateDefaultSubobject<UStaticMeshComponent>(FName("StaticMesh"));	
 
 	SetRootComponent(StaticMesh);
-	SphereCollider = CreateDefaultSubobject<USphereComponent>(FName("SphereCollider"));
-	SphereCollider->SetupAttachment(StaticMesh);
+	
 	//SphereCollider->SetSimulatePhysics(true);
 
+}
+
+AItem::AItem(const FItemSlot& InItemInfo) :
+	ItemInfo(InItemInfo)
+{
+	AItem::AItem();
 }
 
 // Called when the game starts or when spawned
@@ -46,6 +51,17 @@ void AItem::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+}
+
+void AItem::SetItemInfo(const FItemSlot& NewItemInfo)
+{
+	ItemInfo = NewItemInfo;
+
+	auto InventoryItem = ItemInfo.ItemRow.GetRow<FInventoryItemRow>("GetItem");
+	if (InventoryItem && InventoryItem->Mesh.IsValid())
+	{
+		StaticMesh->SetStaticMesh(InventoryItem->Mesh.LoadSynchronous());
+	}
 }
 
 void AItem::Interact()
