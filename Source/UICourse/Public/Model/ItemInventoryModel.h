@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Data/ItemInventory.h"
+#include "INotifyFieldValueChanged.h"
 #include "ItemInventoryModel.generated.h"
 
 /**
@@ -22,8 +23,10 @@ public:
 	FORCEINLINE const FItemSlot* GetItemInfo()const { return &ItemInfo; }
 	FORCEINLINE void SetItemInfo(const FItemSlot& Item) { ItemInfo = Item; }
 	FORCEINLINE void AddStackToItem(const int32 StackToAdd) { ItemInfo.ItemQuantity += StackToAdd; }
-	FORCEINLINE void RemoveStackToItem(const int32 StackToRemove) { ItemInfo.ItemQuantity -= StackToRemove; }
+	UFUNCTION(BlueprintCallable)
+	int32 RemoveStackToItem(const int32 StackToRemove);
 	UFUNCTION(BlueprintPure)
-	FInventoryItemRow& GetItemRefInfo();
+	FInventoryItemRow& GetItemRefInfo();	
+
 	
 };

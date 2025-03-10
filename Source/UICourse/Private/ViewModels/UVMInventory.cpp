@@ -7,6 +7,7 @@
 #include "Data/ItemInventory.h"
 #include "Model/ItemInventoryModel.h"
 #include "Components/InventoryComponent.h"
+#include "ViewModels/UVMInventoryEntryItem.h"
 
 void UUVMInventory::Init()
 {
@@ -57,20 +58,49 @@ void UUVMInventory::SetSelectedItemType(const EItemType ItemType)
 
 void UUVMInventory::UseItem(UItemInventoryModel* ItemToUse)
 {
-	if (ItemToUse->GetItemInfo()->ItemType == EItemType::CONSUMABLE)
-	{
-		ItemToUse->RemoveStackToItem(1);
-	}
 	OnItemUseDelegate.Broadcast(ItemToUse);
+    switch (ItemToUse->GetItemInfo()->ItemType)
+    {
+        case EItemType::CONSUMABLE:
+            ChangeItemQuantity(ItemToUse);
+            break;
+		case EItemType::SWORD:
+		case EItemType::SHIELD:
+			EquipItem(ItemToUse);
+			break;
+        default:
+            break;
+    }
 }
 
 void UUVMInventory::DropItem(UItemInventoryModel* ItemToDrop)
 {
-	ItemToDrop->RemoveStackToItem(1);
-	if (ItemToDrop->GetItemInfo()->ItemQuantity <= 0)
-	{
-		OnRemoveListItemDelegate.Broadcast(ItemToDrop);
-	}
+	ChangeItemQuantity(ItemToDrop);
 	OnDropItemDelegate.Broadcast(ItemToDrop);
 	
+}
+
+void UUVMInventory::ChangeItemQuantity(UItemInventoryModel* ItemToRemove)
+{
+	ItemToRemove->RemoveStackToItem(1);
+	if (ItemToRemove->GetItemInfo()->ItemQuantity <= 0)
+	{
+		OnRemoveListItemDelegate.Broadcast(ItemToRemove);
+		return;
+	}
+
+	auto ItemViewModel = ItemViewModels[ItemToRemove];
+	if (ItemViewModel)
+	{
+		ItemViewModel->SetItemQuantity(ItemToRemove->GetItemInfo()->ItemQuantity);
+	}
+}
+
+void UUVMInventory::EquipItem(UItemInventoryModel* ItemToEquip)
+{
+	auto ItemViewModel = ItemViewModels[ItemToEquip];
+	if (ItemViewModel)
+	{
+		ItemViewModel->SetIsEquipped(!ItemViewModel->GetIsEquipped());
+	}
 }

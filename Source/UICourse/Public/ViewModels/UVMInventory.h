@@ -9,6 +9,7 @@
 
 
 class UItemInventoryModel;
+class UUVMInventoryEntryItem;
 USTRUCT(BlueprintType)
 struct FInventoryByCategory
 {
@@ -39,6 +40,12 @@ class UICOURSE_API UUVMInventory : public UMVVMViewModelBase
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess="true"))
 	TMap<EItemType, FInventoryByCategory> InventoryItemsByType;
 
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	TMap<UItemInventoryModel*, UUVMInventoryEntryItem*> ItemViewModels;
+
+	
+
+
 public:
 
 	FOnItemUse OnItemUseDelegate;
@@ -64,5 +71,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void DropItem(UItemInventoryModel* ItemToDrop);
-	
+
+private:
+	void ChangeItemQuantity(UItemInventoryModel* ItemToRemove);
+
+	void EquipItem(UItemInventoryModel* ItemToEquip);
 };

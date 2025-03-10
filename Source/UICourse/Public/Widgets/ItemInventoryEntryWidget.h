@@ -22,13 +22,14 @@ class UICOURSE_API UItemInventoryEntryWidget : public UUserWidget, public IUserO
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UImage* ItemIcon;
 
-	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
 	UTextBlock* TextItemStack;
 	
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess="true"))
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
 	UItemInventoryModel* InventoryItem;
 
 
 protected:
+	UFUNCTION(BlueprintCallable, Category = ObjectListEntry)
 	virtual void NativeOnListItemObjectSet(UObject* ItemInventoryModel) override;
 };
