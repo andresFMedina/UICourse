@@ -154,6 +154,7 @@ void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
 			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
 			if (Character)
 			{
+				RightHandItemIndex = InventoryItems.IndexOfByKey<UItemInventoryModel*>(ItemToUse);;
 				Character->SetRightHandMesh(ItemToUse->GetItemRefInfo().Mesh);
 			}
 			break;
@@ -162,7 +163,8 @@ void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
 		{
 			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
 			if (Character)
-			{				
+			{
+				LeftHandItemIndex = InventoryItems.IndexOfByKey<UItemInventoryModel*>(ItemToUse);
 				Character->SetLeftHandMesh(ItemToUse->GetItemRefInfo().Mesh);
 			}
 			break;

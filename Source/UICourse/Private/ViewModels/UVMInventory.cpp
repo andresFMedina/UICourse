@@ -33,12 +33,14 @@ void UUVMInventory::Init()
 		SetSelectedItemType(EItemType::CONSUMABLE);
 		OnItemUseDelegate.AddDynamic(PlayerInventory, &UInventoryComponent::UseItem);
 		OnDropItemDelegate.AddDynamic(PlayerInventory, &UInventoryComponent::DropItem);
+		RightHandItem = PlayerInventory->GetRightHandItem();
+		LeftHandItem = PlayerInventory->GetLeftHandItem();		
 	}
 }
 
 const TArray<UItemInventoryModel*> UUVMInventory::GetListByItemType() const
 {
-	if(InventoryItemsByType.Num() > 0)
+	if (InventoryItemsByType.Num() > 0)
 		return InventoryItemsByType[SelectedItemType].InventoryItems;
 	return TArray<UItemInventoryModel*>();
 }
@@ -59,25 +61,31 @@ void UUVMInventory::SetSelectedItemType(const EItemType ItemType)
 void UUVMInventory::UseItem(UItemInventoryModel* ItemToUse)
 {
 	OnItemUseDelegate.Broadcast(ItemToUse);
-    switch (ItemToUse->GetItemInfo()->ItemType)
-    {
-        case EItemType::CONSUMABLE:
-            ChangeItemQuantity(ItemToUse);
-            break;
-		case EItemType::SWORD:
-		case EItemType::SHIELD:
-			EquipItem(ItemToUse);
-			break;
-        default:
-            break;
-    }
+	switch (ItemToUse->GetItemInfo()->ItemType)
+	{
+	case EItemType::CONSUMABLE:
+		ChangeItemQuantity(ItemToUse);
+		break;
+	case EItemType::SWORD:
+		if (RightHandItem) ItemViewModels[RightHandItem]->SetIsEquipped(false);
+		RightHandItem = ItemToUse;
+		EquipItem(ItemToUse);
+		break;
+	case EItemType::SHIELD:
+		if (LeftHandItem) ItemViewModels[LeftHandItem]->SetIsEquipped(false);
+		LeftHandItem = ItemToUse;
+		EquipItem(ItemToUse);
+		break;
+	default:
+		break;
+	}
 }
 
 void UUVMInventory::DropItem(UItemInventoryModel* ItemToDrop)
 {
 	ChangeItemQuantity(ItemToDrop);
 	OnDropItemDelegate.Broadcast(ItemToDrop);
-	
+
 }
 
 void UUVMInventory::ChangeItemQuantity(UItemInventoryModel* ItemToRemove)
@@ -98,9 +106,10 @@ void UUVMInventory::ChangeItemQuantity(UItemInventoryModel* ItemToRemove)
 
 void UUVMInventory::EquipItem(UItemInventoryModel* ItemToEquip)
 {
+
 	auto ItemViewModel = ItemViewModels[ItemToEquip];
 	if (ItemViewModel)
 	{
-		ItemViewModel->SetIsEquipped(!ItemViewModel->GetIsEquipped());
+		ItemViewModel->SetIsEquipped(true);
 	}
 }

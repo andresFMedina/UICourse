@@ -10,7 +10,12 @@
 
 class UImage;
 class UTextBlock;
+class UButton;
 class UItemInventoryModel;
+
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnInventoryItemClick, UItemInventoryModel*, ItemClicked);
+
 /**
  * 
  */
@@ -18,6 +23,9 @@ UCLASS()
 class UICOURSE_API UItemInventoryEntryWidget : public UUserWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, meta = (BindWidget, AllowPrivateAccess = "true"))
+	UButton* ItemButton;
 
 	UPROPERTY(EditDefaultsOnly, meta = (BindWidget))
 	UImage* ItemIcon;
@@ -28,8 +36,15 @@ class UICOURSE_API UItemInventoryEntryWidget : public UUserWidget, public IUserO
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
 	UItemInventoryModel* InventoryItem;
 
+	UFUNCTION()
+	void OnButtonClicked();
+
 
 protected:
 	UFUNCTION(BlueprintCallable, Category = ObjectListEntry)
 	virtual void NativeOnListItemObjectSet(UObject* ItemInventoryModel) override;
+
+public:
+	UPROPERTY(BlueprintAssignable)
+	FOnInventoryItemClick OnInventoryItemClickDelegate;
 };

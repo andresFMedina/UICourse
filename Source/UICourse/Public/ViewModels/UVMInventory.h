@@ -43,7 +43,10 @@ class UICOURSE_API UUVMInventory : public UMVVMViewModelBase
 	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	TMap<UItemInventoryModel*, UUVMInventoryEntryItem*> ItemViewModels;
 
-	
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UItemInventoryModel* RightHandItem;
+	UPROPERTY(BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	UItemInventoryModel* LeftHandItem;
 
 
 public:

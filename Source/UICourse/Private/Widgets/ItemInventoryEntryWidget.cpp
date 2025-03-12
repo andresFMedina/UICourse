@@ -7,6 +7,12 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Kismet/KismetTextLibrary.h"
+#include "Components/Button.h"
+
+void UItemInventoryEntryWidget::OnButtonClicked()
+{
+	OnInventoryItemClickDelegate.Broadcast(InventoryItem);
+}
 
 void UItemInventoryEntryWidget::NativeOnListItemObjectSet(UObject* ItemInventoryModel)
 {
@@ -18,6 +24,8 @@ void UItemInventoryEntryWidget::NativeOnListItemObjectSet(UObject* ItemInventory
 		auto Item = InventoryItem->GetItemInfo()->ItemRow.GetRow<FInventoryItemRow>("Get Row Inv");
 		ItemIcon->SetBrushFromSoftTexture(Item->Thumbnail);
 		TextItemStack->SetText(UKismetTextLibrary::Conv_IntToText(InventoryItem->GetItemInfo()->ItemQuantity));
+
+		ItemButton->OnClicked.AddDynamic(this, &UItemInventoryEntryWidget::OnButtonClicked);
 	}
 
 }
