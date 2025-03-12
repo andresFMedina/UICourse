@@ -23,7 +23,7 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	CurrentHealth = MaxHealth;
 	// ...
 
 }
@@ -76,7 +76,7 @@ void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)
 void UInventoryComponent::SetMaxHealth(const float NewMaxHealth)
 {
 	MaxHealth += NewMaxHealth;
-	OnMaxHealthChangeDelegate.Broadcast(NewMaxHealth);
+	OnMaxHealthChangeDelegate.Broadcast(MaxHealth);
 }
 
 void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
