@@ -70,16 +70,21 @@ AUICourseCharacter::AUICourseCharacter()
 
 	LeftHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftHandEquip"));
 	LeftHandMesh->SetupAttachment(GetMesh(), FName("LeftHandSocket"));
+
+	
+	
 	
 }
 
-void AUICourseCharacter::BeginPlay()
-{
-	// Call the base class  
-	Super::BeginPlay();
-
-	PlayerInteractComponent->OnInteractedDelegate.AddDynamic(InventoryComponent, &UInventoryComponent::AddItem);
+void AUICourseCharacter::BeginPlay()  
+{  
+   // Call the base class  
+   Super::BeginPlay();  
+ 
+   PlayerInteractComponent->OnInteractedDelegate.AddDynamic(InventoryComponent, &UInventoryComponent::AddItem);  
+   GetCapsuleComponent()->OnComponentBeginOverlap.AddDynamic(InventoryComponent, &UInventoryComponent::OnOverlapMoney);  
 }
+
 
 void AUICourseCharacter::Tick(float DeltaTime)
 {

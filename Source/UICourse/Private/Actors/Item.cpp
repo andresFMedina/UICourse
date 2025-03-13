@@ -39,7 +39,7 @@ void AItem::PostInitializeComponents()
 	Super::PostInitializeComponents();
 
 	auto InventoryItem = ItemInfo.ItemRow.GetRow<FInventoryItemRow>("GetItem");
-	if (InventoryItem && InventoryItem->Mesh.IsValid())
+	if (InventoryItem)
 	{
 		StaticMesh->SetStaticMesh(InventoryItem->Mesh.LoadSynchronous());
 	}

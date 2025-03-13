@@ -8,6 +8,7 @@
 #include "Model/ItemInventoryModel.h"
 #include "UICourse/UICourseCharacter.h"
 #include "Actors/Item.h"
+#include "Actors/Rupee.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -65,6 +66,16 @@ void UInventoryComponent::ToggleInventory()
 	bIsShowingMainMenu = false;
 	MainMenuWidget = nullptr;
 	OnInventoryToggleDelegate.Broadcast(false);
+}
+
+void UInventoryComponent::OnOverlapMoney(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if (OtherActor->IsA(ARupee::StaticClass()))
+	{
+		ARupee* Rupee = Cast<ARupee>(OtherActor);
+		AddMoney(Rupee->GetRupeeValue());
+		OtherActor->Destroy();
+	}
 }
 
 void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)

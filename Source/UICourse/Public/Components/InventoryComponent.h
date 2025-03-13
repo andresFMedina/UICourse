@@ -74,6 +74,9 @@ private:
 public:
 	void ToggleInventory();
 
+	UFUNCTION()	
+	void OnOverlapMoney(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
 	FORCEINLINE int32 GetMoneyAmount() const { return MoneyAmount; }
 
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
