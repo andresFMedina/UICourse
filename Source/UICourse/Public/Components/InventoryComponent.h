@@ -15,7 +15,7 @@ class UMainMenuWidget;
 class UItemInventoryModel;
 struct FItemSlot;
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
 class UICOURSE_API UInventoryComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -39,7 +39,13 @@ class UICOURSE_API UInventoryComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stats, meta = (AllowPrivateAccess = "true"))
 	TArray<UItemInventoryModel*> InventoryItems;
 
-public:	
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stats, meta = (AllowPrivateAccess = "true"))
+	int32 RightHandItemIndex{ -1 };
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = Stats, meta = (AllowPrivateAccess = "true"))
+	int32 LeftHandItemIndex{ -1 };
+
+public:
 	// Sets default values for this component's properties
 	UInventoryComponent();
 
@@ -55,18 +61,19 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FOnInventoryToggle OnInventoryToggleDelegate;
 
+
 protected:
 	// Called when the game starts
-	virtual void BeginPlay() override;	
+	virtual void BeginPlay() override;
 
 private:
 	UItemInventoryModel* FindExistingItemByName(const FName ItemName) const;
 
 	void CreateSlot(FItemSlot& NewItemSlot);
 
-public:		
+public:
 	void ToggleInventory();
-	
+
 	FORCEINLINE int32 GetMoneyAmount() const { return MoneyAmount; }
 
 	FORCEINLINE float GetMaxHealth() const { return MaxHealth; }
@@ -74,6 +81,10 @@ public:
 	FORCEINLINE float GetCurrentHealth() const { return CurrentHealth; }
 
 	FORCEINLINE const TArray<UItemInventoryModel*> GetInventoryItems() const { return InventoryItems; }
+
+	FORCEINLINE UItemInventoryModel* GetRightHandItem() const { return RightHandItemIndex >= 0 ?  InventoryItems[RightHandItemIndex] : nullptr; }
+
+	FORCEINLINE UItemInventoryModel* GetLeftHandItem() const { return LeftHandItemIndex >= 0 ? InventoryItems[LeftHandItemIndex] : nullptr; }
 
 	UFUNCTION(BlueprintCallable)
 	void AddMoney(const int32 NewMoneyAmount);

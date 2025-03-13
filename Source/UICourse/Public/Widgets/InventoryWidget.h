@@ -8,6 +8,8 @@
 
 class UTileView;
 class UItemMenuWidget;
+class UItemInventoryModel;
+class UUVMInventory;
 /**
  * 
  */
@@ -20,12 +22,13 @@ class UICOURSE_API UInventoryWidget : public UUserWidget
 	UTileView* InventoryTileView;
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess ="true"))
-	UItemMenuWidget* ItemMenuWidget;
+	UItemMenuWidget* ItemMenuWidget;	
 
 	UFUNCTION(BlueprintCallable)
 	void CloseItemMenuWidget();
 
-	
+	UFUNCTION(BlueprintCallable)
+	void OnRemoveItem(UItemInventoryModel* ItemToRemove);
 
 protected:
 	virtual void NativeConstruct() override;

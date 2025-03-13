@@ -7,6 +7,7 @@
 #include "Data/ItemInventory.h"
 #include "Model/ItemInventoryModel.h"
 #include "UICourse/UICourseCharacter.h"
+#include "Actors/Item.h"
 
 // Sets default values for this component's properties
 UInventoryComponent::UInventoryComponent()
@@ -22,7 +23,7 @@ UInventoryComponent::UInventoryComponent()
 void UInventoryComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
+	CurrentHealth = MaxHealth;
 	// ...
 
 }
@@ -75,7 +76,7 @@ void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)
 void UInventoryComponent::SetMaxHealth(const float NewMaxHealth)
 {
 	MaxHealth += NewMaxHealth;
-	OnMaxHealthChangeDelegate.Broadcast(NewMaxHealth);
+	OnMaxHealthChangeDelegate.Broadcast(MaxHealth);
 }
 
 void UInventoryComponent::SetCurrentHealth(const float NewCurrentHealth)
@@ -113,13 +114,22 @@ void UInventoryComponent::AddItem(FItemSlot NewItemSlot)
 
 void UInventoryComponent::DropItem(UItemInventoryModel* ItemToDrop)
 {
-	if (ItemToDrop->GetItemInfo()->ItemQuantity - 1 <= 0)
+	if (ItemToDrop->GetItemInfo()->ItemQuantity <= 0)
 	{
 		InventoryItems.Remove(ItemToDrop);
 		return;
 	}
+	/*if (ItemToDrop->GetItemInfo()->ItemRow.GetRow<FInventoryItemRow>("")->Mesh)
+	{
+		FVector SpawnLocation = GetOwner()->GetActorLocation() + GetOwner()->GetActorForwardVector() * 100.0f;
+		FRotator SpawnRotation = GetOwner()->GetActorRotation();
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = GetOwner();
+		SpawnParams.Instigator = GetOwner()->GetInstigator();
+		SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	ItemToDrop->RemoveStackToItem(1);
+		GetWorld()->SpawnActor<AItem>(AItem::StaticClass(), SpawnLocation, SpawnRotation, SpawnParams);
+	}*/
 }
 
 void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
@@ -132,6 +142,11 @@ void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
 
 			float HealthToAdd = FMath::Clamp(ItemToUse->GetItemRefInfo().Power, 0.5f, MissingHealth);
 			SetCurrentHealth(HealthToAdd);
+			if (ItemToUse->GetItemInfo()->ItemQuantity <= 0)
+			{
+				InventoryItems.Remove(ItemToUse);
+				return;
+			}
 			break;
 		}
 		case EItemType::SWORD:
@@ -139,6 +154,7 @@ void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
 			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
 			if (Character)
 			{
+				RightHandItemIndex = InventoryItems.IndexOfByKey<UItemInventoryModel*>(ItemToUse);;
 				Character->SetRightHandMesh(ItemToUse->GetItemRefInfo().Mesh);
 			}
 			break;
@@ -147,7 +163,8 @@ void UInventoryComponent::UseItem(UItemInventoryModel* ItemToUse)
 		{
 			AUICourseCharacter* Character = Cast<AUICourseCharacter>(GetOwner());
 			if (Character)
-			{				
+			{
+				LeftHandItemIndex = InventoryItems.IndexOfByKey<UItemInventoryModel*>(ItemToUse);
 				Character->SetLeftHandMesh(ItemToUse->GetItemRefInfo().Mesh);
 			}
 			break;

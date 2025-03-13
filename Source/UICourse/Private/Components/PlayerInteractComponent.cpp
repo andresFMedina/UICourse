@@ -11,13 +11,15 @@
 
 
 
-UItemPickupWidget* UPlayerInteractComponent::RenderInteractWidget()
+UItemPickupWidget* UPlayerInteractComponent::RenderInteractWidget(const FVector& ActorPosition)
 {
 	if (Interactable) 
 	{
 		auto InteractWidget = CreateWidget<UItemPickupWidget>(GetWorld(), PickupWidgetSubclass);
-		PickupWidgetComponent->SetWidget(InteractWidget);
 		InteractWidget->SetText(Interactable->GetName());
+		
+		PickupWidgetComponent->SetWidget(InteractWidget);	
+		PickupWidgetComponent->SetWorldLocation(ActorPosition);
 
 		return InteractWidget;
 	}
@@ -30,7 +32,7 @@ void UPlayerInteractComponent::TraceItem()
 {
 	if (GetOwner()) 
 	{
-		FVector Start = GetOwner()->GetActorLocation() - FVector(0,0,80.f);
+		FVector Start = GetOwner()->GetActorLocation() - FVector(0,0,90.f);
 		FVector ForwardVector = GetOwner()->GetActorForwardVector();
 		FVector End = Start + (ForwardVector * TraceDistance);
 
@@ -46,7 +48,7 @@ void UPlayerInteractComponent::TraceItem()
 			if (HitActor->Implements<UInteractable>())
 			{
 				Interactable = Cast<IInteractable>(HitActor);				
-				RenderInteractWidget();				
+				RenderInteractWidget(HitActor->GetActorLocation());	
 			}
 		}
 		else 
@@ -81,6 +83,7 @@ void UPlayerInteractComponent::BeginPlay()
 		PickupWidgetComponent->RegisterComponent();
 		PickupWidgetComponent->SetWidgetSpace(EWidgetSpace::Screen);
 		PickupWidgetComponent->SetDrawSize(FVector2D(250.f, 30));
+		PickupWidgetComponent->SetManuallyRedraw(true);
 	}
 }
 

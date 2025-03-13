@@ -15,21 +15,19 @@ class UICOURSE_API AItem : public AActor, public IInteractable
 {
 	GENERATED_BODY()
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess="true"))
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Setter, meta = (AllowPrivateAccess = "true"))
 	FItemSlot ItemInfo;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	FName ItemId;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	UStaticMeshComponent* StaticMesh;
-
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
-	USphereComponent* SphereCollider;	
+	UStaticMeshComponent* StaticMesh;	
 	
 public:	
 	// Sets default values for this actor's properties
 	AItem();
+	AItem(const FItemSlot& InItemInfo);
 
 protected:
 	// Called when the game starts or when spawned
@@ -43,6 +41,9 @@ public:
 
 	FORCEINLINE const FName& GetItemId() { return ItemId; }
 	FORCEINLINE const FItemSlot& GetItemInfo() { return ItemInfo; }
+	
+	UFUNCTION()
+	void SetItemInfo(const FItemSlot& NewItemInfo);
 
 	virtual void Interact() override;
 

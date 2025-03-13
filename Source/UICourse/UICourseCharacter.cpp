@@ -88,20 +88,31 @@ void AUICourseCharacter::Tick(float DeltaTime)
 
 void AUICourseCharacter::SetRightHandMesh(TSoftObjectPtr<UStaticMesh> NewRightHandMesh)
 {
-	if (RightHandMesh->GetStaticMesh())
+	if (NewRightHandMesh.IsNull())
 	{
 		RightHandMesh->SetStaticMesh(nullptr);
+		return;
 	}
-	RightHandMesh->SetStaticMesh(NewRightHandMesh.LoadSynchronous());
+	
+	if (NewRightHandMesh.IsValid())
+	{
+		RightHandMesh->SetStaticMesh(NewRightHandMesh.LoadSynchronous());
+	}	
 }
 
 void AUICourseCharacter::SetLeftHandMesh(TSoftObjectPtr<UStaticMesh> NewLeftHandMesh)
 {
-	if (LeftHandMesh->GetStaticMesh())
+	if (NewLeftHandMesh.IsNull())
 	{
 		LeftHandMesh->SetStaticMesh(nullptr);
+		return;
 	}
-	LeftHandMesh->SetStaticMesh(NewLeftHandMesh.LoadSynchronous());
+
+	if (NewLeftHandMesh.IsValid()) 
+	{
+		auto SMLeftHand = NewLeftHandMesh.LoadSynchronous();
+		LeftHandMesh->SetStaticMesh(SMLeftHand);
+	}
 }
 
 //////////////////////////////////////////////////////////////////////////

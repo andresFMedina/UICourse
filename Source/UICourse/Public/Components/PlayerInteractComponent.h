@@ -27,7 +27,7 @@ class UICOURSE_API UPlayerInteractComponent : public UActorComponent
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Trace, meta = (AllowPrivateAccess = "true"))
 	float TraceDistance;
 
-	UItemPickupWidget* RenderInteractWidget();
+	UItemPickupWidget* RenderInteractWidget(const FVector& ActorPosition = FVector::Zero());
 
 	void TraceItem();
 
