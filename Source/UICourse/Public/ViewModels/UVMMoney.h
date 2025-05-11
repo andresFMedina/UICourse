@@ -17,6 +17,8 @@ class UICOURSE_API UUVMMoney : public UMVVMViewModelBase
 
 	UPROPERTY(BlueprintReadOnly, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess))
 	int32 CurrentMoney;
+	UPROPERTY(BlueprintReadOnly, FieldNotify, Setter, Getter, meta = (AllowPrivateAccess))
+	int32 MoneyChanged;
 
 	UFUNCTION(BlueprintCallable)
 	void Init();
@@ -29,4 +31,9 @@ public:
 	int32 GetCurrentMoney() const;
 	UFUNCTION(BlueprintCallable)
 	void SetCurrentMoney(const int32 NewAmount);
+
+	UFUNCTION(BlueprintPure, FieldNotify)
+	int32 GetMoneyChanged() const;
+	UFUNCTION(BlueprintCallable)
+	void SetMoneyChanged(const int32 NewAmount);
 };

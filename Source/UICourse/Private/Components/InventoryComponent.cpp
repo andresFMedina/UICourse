@@ -81,7 +81,7 @@ void UInventoryComponent::OnOverlapMoney(UPrimitiveComponent* OverlappedComp, AA
 void UInventoryComponent::AddMoney(const int32 NewMoneyAmount)
 {
 	MoneyAmount += NewMoneyAmount;
-	OnMoneyChangeDelegate.Broadcast(MoneyAmount);
+	OnMoneyChangeDelegate.Broadcast(NewMoneyAmount);
 }
 
 void UInventoryComponent::SetMaxHealth(const float NewMaxHealth)

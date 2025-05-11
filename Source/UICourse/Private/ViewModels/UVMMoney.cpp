@@ -31,7 +31,19 @@ int32 UUVMMoney::GetCurrentMoney() const
 
 void UUVMMoney::SetCurrentMoney(const int32 NewAmount)
 {
-	UE_MVVM_SET_PROPERTY_VALUE(CurrentMoney, NewAmount);
+	CurrentMoney += NewAmount;
+	SetMoneyChanged(NewAmount);
+	UE_MVVM_BROADCAST_FIELD_VALUE_CHANGED(CurrentMoney);
+}
+
+int32 UUVMMoney::GetMoneyChanged() const
+{
+	return MoneyChanged;
+}
+
+void UUVMMoney::SetMoneyChanged(const int32 NewAmount)
+{
+	UE_MVVM_SET_PROPERTY_VALUE(MoneyChanged, NewAmount);
 }
 
 
