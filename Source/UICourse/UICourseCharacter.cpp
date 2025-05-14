@@ -70,10 +70,6 @@ AUICourseCharacter::AUICourseCharacter()
 
 	LeftHandMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("LeftHandEquip"));
 	LeftHandMesh->SetupAttachment(GetMesh(), FName("LeftHandSocket"));
-
-	
-	
-	
 }
 
 void AUICourseCharacter::BeginPlay()  
